@@ -35,11 +35,14 @@
         events.forEach((event) => {
           const item = document.createElement('li');
           const type = event?.type || 'unknown';
+          const timestamp = event?.timestamp || 'unknown';
           const strong = document.createElement('strong');
           strong.textContent = type;
+          const timestampLine = document.createElement('div');
+          timestampLine.textContent = timestamp;
           const pre = document.createElement('pre');
           pre.textContent = JSON.stringify(event?.payload ?? null, null, 2);
-          item.append(strong, pre);
+          item.append(strong, timestampLine, pre);
           eventsList.appendChild(item);
         });
       }
