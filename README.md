@@ -29,4 +29,11 @@ Producer repo: https://github.com/NickAzureDevops/pac-man-game
 
 This repo is only the backend service + dashboard consumer side.
 
+## Demo architecture (summary)
+
+- `pac-man-game` produces gameplay events.
+- `pac-man-services` consumes events and visualizes them live.
+- `pac-man-canvas` in this repo demonstrates agent orchestration for the integration flow.
+- optional MCP server can coordinate cross-repo checks across both repos.
+
 For the full multi-repo GitHub Copilot Apps story (repo roles, Canvas orchestration, and end-to-end flow), see [`docs/copilot-apps-demo-guide.md`](docs/copilot-apps-demo-guide.md).
