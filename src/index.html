@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pac-Man Services Dashboard</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 24px; }
+      h1 { margin-bottom: 8px; }
+      p { color: #555; }
+      ul { padding-left: 0; list-style: none; }
+      li { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 10px; background: #fafafa; }
+      pre { margin: 8px 0 0; white-space: pre-wrap; word-break: break-word; }
+      .empty { color: #888; font-style: italic; }
+    </style>
+  </head>
+  <body>
+    <h1>Pac-Man Event Stream</h1>
+    <p>Polling <code>/events</code> every 1.5 seconds.</p>
+    <ul id="events"></ul>
+
+    <script>
+      const eventsList = document.getElementById('events');
+
+      function renderEvents(events) {
+        if (!events.length) {
+          const empty = document.createElement('li');
+          empty.className = 'empty';
+          empty.textContent = 'No events yet.';
+          eventsList.replaceChildren(empty);
+          return;
+        }
+
+        eventsList.replaceChildren();
+        events.forEach((event) => {
+          const item = document.createElement('li');
+          const type = event?.type || 'unknown';
+          const strong = document.createElement('strong');
+          strong.textContent = type;
+          const pre = document.createElement('pre');
+          pre.textContent = JSON.stringify(event?.payload ?? null, null, 2);
+          item.append(strong, pre);
+          eventsList.appendChild(item);
+        });
+      }
+
+      async function refreshEvents() {
+        try {
+          const response = await fetch('/events');
+          const events = await response.json();
+          renderEvents(events);
+        } catch (error) {
+          const item = document.createElement('li');
+          item.textContent = `Failed to load events: ${error.message}`;
+          eventsList.replaceChildren(item);
+        }
+      }
+
+      refreshEvents();
+      setInterval(refreshEvents, 1500);
+    </script>
+  </body>
+</html>
