@@ -22,6 +22,16 @@ Supported event types:
 - `scoreUpdated`
 - `achievementCandidate`
 
+## Event contract
+
+```json
+{
+  "type": "scoreUpdated | achievementCandidate",
+  "timestamp": "ISO-8601",
+  "payload": {}
+}
+```
+
 ## Example event
 
 ```json
@@ -33,3 +43,9 @@ Supported event types:
   }
 }
 ```
+
+## Demo startup order
+
+1. Start `pac-man-services` on port `3001`.
+2. Start `pac-man-game`.
+3. Play the game and verify new events appear at `http://localhost:3001`.
