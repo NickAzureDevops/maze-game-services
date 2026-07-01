@@ -1,5 +1,5 @@
 {
-  "name": "pac-man-services",
+  "name": "maze-game-services",
   "version": "1.0.0",
   "description": "Minimal pacman event ingestion API and live dashboard",
   "main": "src/server.js",

@@ -1,4 +1,4 @@
-# pac-man-services
+# maze-game-services
 
 Minimal **event consumer** service for the Pac-Man demo:
 - ingests game events
@@ -32,7 +32,7 @@ This repo is only the backend service + dashboard consumer side.
 ## Demo architecture (summary)
 
 - `pac-man-game` produces gameplay events.
-- `pac-man-services` consumes events and visualizes them live.
+- `maze-game-services` consumes events and visualizes them live.
 - `pac-man-canvas` in this repo demonstrates agent orchestration for the integration flow.
 - optional MCP server can coordinate cross-repo checks across both repos.
 
