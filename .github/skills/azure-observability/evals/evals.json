@@ -1,0 +1,41 @@
+{
+  "skill_name": "azure-observability",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Add a new event type `levelAdvanced` to the ingestion API and dashboard so it validates in POST /event, appears in GET /events, and renders payload fields at the top of the dashboard. Include exact code changes and curl checks.",
+      "expected_output": "Surgical API and dashboard code updates with working validation plus curl commands that prove POST and GET behavior for levelAdvanced.",
+      "files": [],
+      "assertions": [
+        "Includes explicit unified-diff style code patch snippets for API and dashboard changes.",
+        "Includes at least one curl command for POST /event and one for GET /events.",
+        "Mentions levelAdvanced event type and validates event-contract shape with type/timestamp/payload.",
+        "Contains a final end-to-end verification summary from game to service to dashboard."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "POST /event is intermittently failing from the game with CORS errors after a frontend change. Diagnose likely causes in pac-man-services, apply the smallest fix, and provide commands to prove cross-port ingestion works again.",
+      "expected_output": "A focused CORS-related fix in the service, preserving constraints, plus commands that demonstrate successful cross-origin event ingestion and retrieval.",
+      "files": [],
+      "assertions": [
+        "Identifies at least one plausible CORS-related root cause tied to the current service setup.",
+        "Provides a minimal unified-diff style patch focused on CORS behavior.",
+        "Includes reproducible validation commands that verify cross-origin POST /event success and GET /events retrieval.",
+        "Includes a concise final verification summary confirming ingestion recovery."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need Azure Monitor / Log Analytics visibility for this pipeline: event rate by type, p95 ingestion latency, and API failures on /event. Give KQL queries and a verification summary tied to game->service->dashboard flow.",
+      "expected_output": "Actionable KQL and observability steps tailored to this event pipeline, including metrics for rate, latency, and failures with a clear end-to-end verification summary.",
+      "files": [],
+      "assertions": [
+        "Provides KQL for event rate by type.",
+        "Provides KQL for p95 ingestion latency.",
+        "Provides KQL for /event API failures.",
+        "Includes a verification summary explicitly tied to game->service->dashboard flow."
+      ]
+    }
+  ]
+}
