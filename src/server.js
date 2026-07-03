@@ -2,7 +2,15 @@ const express = require('express');
 
 const app = express();
 const events = [];
-const supportedEventTypes = new Set(['scoreUpdated', 'achievementCandidate']);
+const canonicalEventTypes = new Set(['quizScoreUpdated', 'streakMilestoneCandidate']);
+const legacyToQuizEventType = {
+  scoreUpdated: 'quizScoreUpdated',
+  achievementCandidate: 'streakMilestoneCandidate'
+};
+const supportedEventTypes = new Set([
+  ...canonicalEventTypes,
+  ...Object.keys(legacyToQuizEventType)
+]);
 
 app.use(express.json());
 
@@ -37,11 +45,16 @@ app.post('/event', (req, res) => {
   if (!supportedEventTypes.has(event.type)) {
     return res.status(400).json({
       ok: false,
-      error: 'Unsupported event type. Supported: scoreUpdated, achievementCandidate'
+      error:
+        'Unsupported event type. Supported: quizScoreUpdated, streakMilestoneCandidate, scoreUpdated, achievementCandidate'
     });
   }
 
-  events.push(event);
+  const normalizedType = legacyToQuizEventType[event.type] || event.type;
+  events.push({
+    ...event,
+    type: normalizedType
+  });
   return res.status(201).json({ ok: true });
 });
 
@@ -52,5 +65,5 @@ app.get('/events', (_req, res) => {
 const port = 3001;
 
 app.listen(port, () => {
-  console.log(`pacman-services listening on http://localhost:${port}`);
+  console.log(`quiz services listening on http://localhost:${port}`);
 });

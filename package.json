@@ -1,7 +1,7 @@
 {
   "name": "maze-game-services",
   "version": "1.0.0",
-  "description": "Minimal pacman event ingestion API and live dashboard",
+  "description": "Minimal Copilot Apps quiz event ingestion API and live dashboard",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js"
