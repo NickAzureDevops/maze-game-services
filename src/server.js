@@ -2,15 +2,7 @@ const express = require('express');
 
 const app = express();
 const events = [];
-const canonicalEventTypes = new Set(['quizScoreUpdated', 'streakMilestoneCandidate']);
-const legacyToQuizEventType = {
-  scoreUpdated: 'quizScoreUpdated',
-  achievementCandidate: 'streakMilestoneCandidate'
-};
-const supportedEventTypes = new Set([
-  ...canonicalEventTypes,
-  ...Object.keys(legacyToQuizEventType)
-]);
+const supportedEventTypes = new Set(['scoreUpdated', 'achievementCandidate']);
 
 app.use(express.json());
 
@@ -45,16 +37,11 @@ app.post('/event', (req, res) => {
   if (!supportedEventTypes.has(event.type)) {
     return res.status(400).json({
       ok: false,
-      error:
-        'Unsupported event type. Supported: quizScoreUpdated, streakMilestoneCandidate, scoreUpdated, achievementCandidate'
+      error: 'Unsupported event type. Supported: scoreUpdated, achievementCandidate'
     });
   }
 
-  const normalizedType = legacyToQuizEventType[event.type] || event.type;
-  events.push({
-    ...event,
-    type: normalizedType
-  });
+  events.push(event);
   return res.status(201).json({ ok: true });
 });
 
