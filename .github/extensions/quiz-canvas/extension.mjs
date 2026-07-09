@@ -1,20 +1,19 @@
-// extension.mjs — pac-man-canvas
+// extension.mjs — quiz-canvas
 //
-// Canvas extension for the Pac-Man Copilot Apps demo.
+// Canvas extension for the Copilot quiz demo.
 // Mirrors the pattern from leestott/agent-runtime-canvas.
 //
 // Actions (callable by AI agent or human buttons in the canvas panel):
-//   assign_plan         — materialise the 3-agent execution graph
-//   run_game_agent      — verify emitEvent() in pac-man-game
-//   run_platform_agent  — verify pac-man-services API + dashboard
-//   run_integration_agent — validate schema + CORS across both repos
-//   validate_integration  — run 5-test validation suite
-//   check_event_stream  — surface the live dashboard URL
-//   reset_canvas        — reset to initial state
+//   assign_plan          — materialise the 2-agent execution graph
+//   run_game_agent       — verify emitEvent() in copilot-quiz
+//   run_integration_agent — verify copilot-quiz-service API + dashboard + contract
+//   validate_integration — run 5-test validation suite
+//   check_event_stream   — surface the live dashboard URL
+//   reset_canvas         — reset to initial state
 
 import { createServer } from "node:http";
 import { joinSession, createCanvas } from "@github/copilot-sdk/extension";
-import { PacManStore } from "./store.mjs";
+import { QuizStore } from "./store.mjs";
 import { renderHtml } from "./ui.mjs";
 
 const stores = new Map();
@@ -28,7 +27,7 @@ const log = (msg, level = "info") => {
 
 async function getStore(docId) {
   let store = stores.get(docId);
-  if (!store) { store = new PacManStore(docId); stores.set(docId, store); }
+  if (!store) { store = new QuizStore(docId); stores.set(docId, store); }
   return store;
 }
 
@@ -54,7 +53,6 @@ function applyControl(store, body) {
   switch (body.action) {
     case "assign_plan":       return store.assignPlan();
     case "run_game":          return store.runAgent("game-agent");
-    case "run_platform":      return store.runAgent("platform-agent");
     case "run_integration":   return store.runAgent("integration-agent");
     case "validate":          return store.validate();
     case "reset":             return store.reset();
@@ -121,12 +119,12 @@ async function startServer(instanceId, docId) {
 // ─── Canvas declaration ──────────────────────────────────────────────────────
 
 const canvas = createCanvas({
-  id: "pac-man-canvas",
-  displayName: "Pac-Man Agent Orchestration",
+  id: "quiz-canvas",
+  displayName: "Quiz Agent Orchestration",
   description:
-    "Live orchestration surface for the Pac-Man Copilot Apps demo. " +
-    "Shows the 3-agent execution plan, per-agent status, validation results, " +
-    "and a link to the live event stream from pac-man-services.",
+    "Live orchestration surface for the Copilot quiz demo. " +
+    "Shows the 2-agent execution plan, per-agent status, validation results, " +
+    "and a link to the live event stream from copilot-quiz-service.",
 
   inputSchema: {
     type: "object",
@@ -139,25 +137,19 @@ const canvas = createCanvas({
   actions: [
     {
       name: "assign_plan",
-      description: "Materialise the 3-agent execution graph: Game Agent → Platform Agent → Integration Agent.",
+      description: "Materialise the 2-agent execution graph: Game Agent → Integration Agent.",
       inputSchema: { type: "object", properties: { documentId: { type: "string" } }, additionalProperties: true },
       handler: async (ctx) => { const s = await getStore(docFor(ctx.instanceId, ctx.input)); return s.assignPlan(); },
     },
     {
       name: "run_game_agent",
-      description: "Run the Game Agent: verify emitEvent() is correctly wired in pac-man-game with the right event types.",
+      description: "Run the Game Agent: verify emitEvent() is correctly wired in copilot-quiz with the right event types.",
       inputSchema: { type: "object", properties: { documentId: { type: "string" } }, additionalProperties: true },
       handler: async (ctx) => { const s = await getStore(docFor(ctx.instanceId, ctx.input)); return s.runAgent("game-agent"); },
     },
     {
-      name: "run_platform_agent",
-      description: "Run the Platform Agent: verify pac-man-services API contract, CORS headers, dashboard, and .gitignore.",
-      inputSchema: { type: "object", properties: { documentId: { type: "string" } }, additionalProperties: true },
-      handler: async (ctx) => { const s = await getStore(docFor(ctx.instanceId, ctx.input)); return s.runAgent("platform-agent"); },
-    },
-    {
       name: "run_integration_agent",
-      description: "Run the Integration Agent: cross-validate schema compatibility and event flow between both repos.",
+      description: "Run the Integration Agent: verify copilot-quiz-service API contract, CORS headers, dashboard, and repo contract.",
       inputSchema: { type: "object", properties: { documentId: { type: "string" } }, additionalProperties: true },
       handler: async (ctx) => { const s = await getStore(docFor(ctx.instanceId, ctx.input)); return s.runAgent("integration-agent"); },
     },
@@ -169,11 +161,11 @@ const canvas = createCanvas({
     },
     {
       name: "check_event_stream",
-      description: "Surface the live event stream URL from pac-man-services and the latest event count.",
+      description: "Surface the live event stream URL from copilot-quiz-service and the latest event count.",
       inputSchema: {
         type: "object",
         properties: {
-          serviceUrl: { type: "string", description: "pac-man-services base URL (default: http://localhost:3001)." },
+          serviceUrl: { type: "string", description: "copilot-quiz-service base URL (default: http://localhost:3001)." },
           documentId: { type: "string" },
         },
         additionalProperties: true,
@@ -195,8 +187,8 @@ const canvas = createCanvas({
     if (!entry) { entry = await startServer(ctx.instanceId, docId); servers.set(ctx.instanceId, entry); }
 
     const store = await getStore(docId);
-    log(`pac-man-canvas open (doc=${docId})`);
-    return { title: "Pac-Man Agent Orchestration", status: store.snapshot().status, url: entry.url };
+    log(`quiz-canvas open (doc=${docId})`);
+    return { title: "Quiz Agent Orchestration", status: store.snapshot().status, url: entry.url };
   },
 
   onClose: async (ctx) => {
@@ -212,4 +204,4 @@ const canvas = createCanvas({
 });
 
 sdkSession = await joinSession({ canvases: [canvas] });
-log("pac-man-canvas extension ready");
+log("quiz-canvas extension ready");

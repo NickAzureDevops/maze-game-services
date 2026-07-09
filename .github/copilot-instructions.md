@@ -1,6 +1,6 @@
-# Copilot instructions for pac-man-services
+# Copilot instructions for copilot-quiz-service
 
-This repository is the **event ingestion + visualization platform** for the Pac-Man demo.
+This repository is the **event ingestion + visualization platform** for the Copilot Apps quiz demo.
 
 ## Primary goal
 Build and maintain a minimal, demo-stable service that consumes game events and displays them live.
@@ -40,6 +40,6 @@ Behavior:
 - Render event `type`, `timestamp`, and full `payload` JSON
 
 ## Integration context
-Producer repo: https://github.com/NickAzureDevops/pac-man-game
+Producer repo: https://github.com/NickAzureDevops/copilot-quiz
 
-Treat this repo as event consumer/visualizer only. Do not add gameplay logic here.
+Treat this repo as the event visualizer only. Do not add gameplay logic here.

@@ -1,58 +1,71 @@
 ---
 name: azure-observability
-description: Monitor and troubleshoot the Pac-Man live event pipeline end-to-end, including Azure Monitor/Log Analytics checks, Node.js ingestion API updates, dashboard UI updates, event contract validation, and deployment verification. Use this skill whenever the user asks to add or change event types, debug POST /event or GET /events behavior, validate CORS or in-memory storage, verify game-to-service integration, or confirm dashboard health and event latency, even if they do not explicitly mention "observability."
+description: "Monitor and troubleshoot the Copilot quiz live event pipeline end-to-end, including Azure Monitor/Log Analytics checks, Node.js ingestion API updates, dashboard UI updates, event contract validation, and deployment verification. Use this skill whenever the user asks to add or change event types, debug POST /event or GET /events behavior, validate CORS or in-memory storage, verify game-to-service integration, or confirm dashboard health and event latency, even if they do not explicitly mention \"observability.\""
+license: MIT
+metadata:
+  author: GitHub Copilot
+  version: "1.0.0"
 ---
 
-# Azure Observability for Pac-Man Event Pipeline
+# Azure Observability for Copilot Quiz
 
-Use this skill to make surgical, reliable changes to the Pac-Man producer/consumer flow and verify that telemetry and live rendering still work.
+> **AUTHORITATIVE GUIDANCE — MANDATORY COMPLIANCE**
+>
+> This skill is the primary guide for diagnosing and improving the Copilot quiz event pipeline. Keep changes minimal, preserve the demo contract, and verify end-to-end behavior before finishing.
 
-## What this skill should produce
+## Triggers
 
-1. Exact code patches for targeted files (typically `src/server.js`, `src/index.html`, and producer event code in the game repo).
-2. `curl` commands to validate:
-   - `POST /event` accepts the intended contract.
-   - `GET /events` returns newest-first and reflects new events.
-3. A final verification summary that confirms end-to-end flow: game event emission -> service ingestion -> dashboard rendering.
+Activate this skill when the user wants to:
+- Add or change quiz event types
+- Diagnose `POST /event` or `GET /events` behavior
+- Investigate CORS, payload validation, or in-memory storage issues
+- Verify integration-to-visualizer flow
+- Confirm dashboard polling, ordering, or rendering
+- Add Azure Monitor / Log Analytics visibility for event rate, latency, or API failures
 
-## Core workflow
+## Rules
 
-1. Identify scope and boundaries.
-   - Confirm whether changes belong in consumer (`pac-man-services`), producer (`pac-man-game`), or both.
-   - Preserve hard constraints: Node.js + Express backend, vanilla HTML/JS frontend, in-memory storage, port `3001`, CORS retained.
+1. Start with the smallest possible fix.
+2. Keep the backend in Node.js + Express only.
+3. Keep the frontend vanilla HTML + JavaScript only.
+4. Keep storage in memory only.
+5. Keep the service on port `3001`.
+6. Do not remove CORS behavior.
+7. Preserve the event contract: `{ type, timestamp, payload }`.
+8. Validate with direct API checks before claiming success.
 
-2. Validate contract before editing.
-   - Event shape: `{ type, timestamp, payload }`.
-   - Supported types and expected payload fields should remain explicit and consistent across producer and consumer.
+## Quick Diagnosis Flow
 
-3. Apply minimal, surgical edits.
-   - Edit only files directly tied to the request.
-   - Keep reverse-chronological event behavior and dashboard polling behavior intact unless explicitly asked to change.
+1. **Identify symptoms** - What is failing, and where?
+2. **Check contract** - Does the emitted event still match the service contract?
+3. **Review the service** - Is `POST /event` accepting and storing the event?
+4. **Review retrieval** - Does `GET /events` return newest-first data?
+5. **Check dashboard rendering** - Does the UI show the latest events and payload JSON?
+6. **Add observability** - If requested, use KQL to track rate, latency, and failures.
 
-4. Verify with direct API checks.
-   - Provide concrete `curl` commands for valid and invalid payloads when relevant.
-   - Confirm ingestion and retrieval behavior for each changed event type.
+## Troubleshooting Guidance
 
-5. Confirm live dashboard behavior.
-   - Ensure newest events appear first and payload JSON renders fully.
-   - Surface any mismatch between emitted event schema and rendered fields.
+### Service issues
+- Validate request shape early and return explicit `400` errors.
+- Keep accepted event types explicit and aligned with the integration source.
+- Avoid adding persistence, auth, sessions, or abstractions that the demo does not need.
 
-6. Add Azure observability checks when requested.
-   - For Azure Monitor / Log Analytics asks, provide practical KQL and monitoring steps tied to ingestion rate, latency, and dashboard/API health.
-   - Keep recommendations actionable and mapped to this system's endpoints and event schema.
+### Dashboard issues
+- Ensure polling continues every 1-2 seconds.
+- Render newest events at the top.
+- Show type, timestamp, and full payload JSON for every event.
 
-## Guardrails
+### Azure observability
+- For Azure Monitor / Log Analytics asks, use the queries in [references/kql-queries.md](references/kql-queries.md).
+- Focus on event rate by type, p95 ingestion latency, and `/event` failures.
 
-- Do not introduce databases, auth/session layers, framework migrations, or unnecessary abstractions.
-- Do not change service port from `3001`.
-- Do not remove CORS behavior.
-- Prefer explicit failures and clear validation errors over silent fallbacks.
+## Output expectations
 
-## Output template
+When responding, provide:
+1. The exact files to change and why.
+2. The commands or checks used to verify the fix.
+3. A short end-to-end summary from game → service → dashboard.
 
-Use this structure for final responses:
+## References
 
-1. **Code patches**: list file-level changes and why each change was needed.
-2. **Validation commands**: ready-to-run `curl` commands for `POST /event` and `GET /events`.
-3. **Verification summary**: concise confirmation of end-to-end event flow and any remaining risk or follow-up.
-
+- [KQL Query Library](references/kql-queries.md)

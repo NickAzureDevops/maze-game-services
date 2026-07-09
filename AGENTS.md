@@ -1,6 +1,6 @@
-# AGENTS.md — pac-man-services
+# AGENTS.md — copilot-quiz-service
 
-Event ingestion API and live dashboard for the Pac-Man Copilot Apps demo.
+Event ingestion API and live dashboard for the Copilot Apps quiz demo.
 
 ## Setup
 
@@ -82,7 +82,7 @@ curl -s http://localhost:3001/events
 
 ## Integration context
 
-Producer repo: https://github.com/NickAzureDevops/pac-man-game
+Producer repo: https://github.com/NickAzureDevops/copilot-quiz
 
 The game POSTs events from the browser to `http://localhost:3001/event`.
 This service consumes them and displays them live at `http://localhost:3001`.

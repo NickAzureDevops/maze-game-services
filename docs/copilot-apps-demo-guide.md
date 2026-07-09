@@ -1,4 +1,4 @@
-# Maze Game GitHub Copilot Apps Demo Guide
+# Copilot Apps Quiz Demo Guide
 
 This guide explains the **end-to-end demo story** across repositories, the Canvas orchestration surface, and an optional MCP server layer.
 
@@ -6,25 +6,25 @@ This guide explains the **end-to-end demo story** across repositories, the Canva
 
 | Repo | Role in demo | What it demonstrates |
 | --- | --- | --- |
-| [`NickAzureDevops/maze-game`](https://github.com/NickAzureDevops/maze-game) | Event producer | Game emits gameplay events from browser code (`scoreUpdated`, `achievementCandidate`). |
-| [`NickAzureDevops/maze-game-services`](https://github.com/NickAzureDevops/maze-game-services) | Event consumer + dashboard | Backend event ingestion (`POST /event`) and live visualization (`GET /events` + polling UI). |
+| [`NickAzureDevops/copilot-quiz`](https://github.com/NickAzureDevops/copilot-quiz) | Main repo / integration source | Game emits quiz events from browser code (`scoreUpdated`, `achievementCandidate`). |
+| [`NickAzureDevops/copilot-quiz-service`](https://github.com/NickAzureDevops/copilot-quiz-service) | Linked service repo / visualizer | Backend event ingestion (`POST /event`) and live visualization (`GET /events` + polling UI). |
 
 ## Canvas role in the main repo
 
-`maze-game-services` also includes a custom Copilot Canvas extension at `.github/extensions/maze-game-canvas`.
+`copilot-quiz-service` also includes a custom Copilot Canvas extension at `.github/extensions/quiz-canvas` that links the main `copilot-quiz` repo to this service repo.
 
 It demonstrates **agent orchestration** by showing:
 - a 3-agent execution plan (Game Agent, Platform Agent, Integration Agent)
 - per-agent run status
 - integration validation results
-- a link to the live event stream in `maze-game-services`
+- a link to the live event stream in `copilot-quiz-service`
 
 ## Optional MCP server for multi-repo coordination
 
 If you want a stronger "control plane" story, add an MCP server that can work across both repos.
 
 Suggested role:
-- expose repo-aware tools for `maze-game` + `maze-game-services`
+- expose repo-aware tools for `copilot-quiz` + `copilot-quiz-service`
 - run cross-repo checks (event schema compatibility, endpoint reachability, CORS expectations)
 - provide a single interface for agent/tooling workflows that need both repositories
 
@@ -32,10 +32,10 @@ This keeps product code simple in each repo while enabling richer orchestration 
 
 ## End-to-end flow
 
-1. Start `maze-game-services` on `http://localhost:3001`.
-2. Start `maze-game`.
+1. Start `copilot-quiz-service` on `http://localhost:3001`.
+2. Start `copilot-quiz`.
 3. While playing the game, events are posted to `POST /event`.
-4. `maze-game-services` stores events in memory and serves them via `GET /events`.
+4. `copilot-quiz-service` stores events in memory and serves them via `GET /events`.
 5. Dashboard and Canvas reflect integration health and event flow.
 6. (Optional) MCP server runs cross-repo validations and coordination tasks.
 

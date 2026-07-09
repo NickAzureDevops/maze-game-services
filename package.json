@@ -1,5 +1,5 @@
 {
-  "name": "maze-game-services",
+  "name": "copilot-quiz-service",
   "version": "1.0.0",
   "description": "Minimal Copilot Apps quiz event ingestion API and live dashboard",
   "main": "src/server.js",
