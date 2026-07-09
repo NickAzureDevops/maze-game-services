@@ -1,5 +1,5 @@
 // ui.mjs — renderHtml()
-// Canvas iframe for the Pac-Man agent orchestration panel.
+// Canvas iframe for the quiz agent orchestration panel.
 // Mirrors the dark-theme UI pattern from leestott/agent-runtime-canvas.
 
 export function renderHtml() {
@@ -8,7 +8,7 @@ export function renderHtml() {
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Pac-Man Agent Orchestration</title>
+<title>Quiz Agent Orchestration</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d0d0d;color:#e0e0e0;padding:16px;font-size:13px;line-height:1.4}
@@ -59,14 +59,13 @@ export function renderHtml() {
 </head>
 <body>
 
-<h1>&#127183; Pac-Man Agent Orchestration</h1>
+<h1>&#127183; Quiz Agent Orchestration</h1>
 
 <div class="status-bar">Status: <span id="sv" class="val">idle</span></div>
 
 <div class="controls">
   <button onclick="ctl('assign_plan')">&#128203; Assign Plan</button>
   <button onclick="ctl('run_game')">&#127918; Game Agent</button>
-  <button onclick="ctl('run_platform')">&#127760; Platform Agent</button>
   <button onclick="ctl('run_integration')">&#128279; Integration Agent</button>
   <button onclick="ctl('validate')">&#10003; Validate</button>
   <button onclick="ctl('reset')" style="margin-left:auto">&#10227; Reset</button>

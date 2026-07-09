@@ -1,5 +1,5 @@
-// store.mjs — PacManStore
-// In-memory state model for the pac-man-canvas extension.
+// store.mjs — QuizStore
+// In-memory state model for the quiz-canvas extension.
 // Mirrors the SystemStore pattern from leestott/agent-runtime-canvas.
 
 import { EventEmitter } from "node:events";
@@ -9,7 +9,7 @@ const AGENTS = [
     id: "game-agent",
     name: "Game Agent",
     emoji: "🎮",
-    repo: "NickAzureDevops/pac-man-game",
+    repo: "NickAzureDevops/copilot-quiz (main repo)",
     task: "Verify emitEvent() hooks in src/main.js and src/counter.js",
     checks: [
       "emitEvent() exported from src/counter.js",
@@ -20,45 +20,30 @@ const AGENTS = [
     ],
   },
   {
-    id: "platform-agent",
-    name: "Platform Agent",
-    emoji: "🌐",
-    repo: "NickAzureDevops/pac-man-services",
-    task: "Verify Express API, CORS, dashboard, and .gitignore",
+    id: "integration-agent",
+    name: "Integration Agent",
+    emoji: "🔗",
+    repo: "NickAzureDevops/copilot-quiz-service (linked service repo)",
+    task: "Verify the service API, dashboard, CORS, and the contract between both repos",
     checks: [
       "POST /event accepts scoreUpdated and achievementCandidate",
       "GET /events returns newest-first array",
       "CORS headers present (Access-Control-Allow-Origin: *)",
       "OPTIONS preflight handled (HTTP 204)",
-      ".gitignore includes node_modules/",
-      "Dashboard polls /events every 1–2 seconds",
-    ],
-  },
-  {
-    id: "integration-agent",
-    name: "Integration Agent",
-    emoji: "🔗",
-    repo: "both repos",
-    task: "Cross-validate schema compatibility and end-to-end event flow",
-    checks: [
       "Event type strings match exactly across both repos",
-      "No achievementTriggered anywhere in game code",
-      "Payload shapes consistent (score, delta, level)",
-      "No CORS errors in browser console",
-      "Events appear in dashboard within 2 seconds of game action",
+      "Dashboard polls /events every 1–2 seconds",
     ],
   },
 ];
 
 const PLAN_STEPS = [
   { id: "step-1", label: "Assign agents to repos", agent: null },
-  { id: "step-2", label: "🎮 Game Agent: instrument pac-man-game", agent: "game-agent" },
-  { id: "step-3", label: "🌐 Platform Agent: verify pac-man-services", agent: "platform-agent" },
-  { id: "step-4", label: "🔗 Integration Agent: validate event flow", agent: "integration-agent" },
-  { id: "step-5", label: "✓ Validate integration (5 tests)", agent: null },
+  { id: "step-2", label: "🎮 Game Agent: instrument copilot-quiz", agent: "game-agent" },
+  { id: "step-3", label: "🔗 Integration Agent: verify copilot-quiz-service", agent: "integration-agent" },
+  { id: "step-4", label: "✓ Validate integration (5 tests)", agent: null },
 ];
 
-export class PacManStore extends EventEmitter {
+export class QuizStore extends EventEmitter {
   constructor(docId) {
     super();
     this.docId = docId;
@@ -88,7 +73,7 @@ export class PacManStore extends EventEmitter {
   assignPlan() {
     this._model.status = "planning";
     this._model.plan[0].status = "done";
-    this._emit("Plan assigned: Game Agent → Platform Agent → Integration Agent");
+    this._emit("Plan assigned: Game Agent → Integration Agent");
     return { ok: true, plan: this._model.plan };
   }
 
@@ -116,28 +101,28 @@ export class PacManStore extends EventEmitter {
     const tests = [
       {
         name: "scoreUpdated schema",
-        target: "pac-man-game → pac-man-services",
+        target: "copilot-quiz → copilot-quiz-service",
         expected: "type=scoreUpdated, payload has score/delta/level",
         actual: "type=scoreUpdated, payload has score/delta/level",
         pass: true,
       },
       {
         name: "achievementCandidate schema",
-        target: "pac-man-game → pac-man-services",
+        target: "copilot-quiz → copilot-quiz-service",
         expected: "type=achievementCandidate (not achievementTriggered)",
         actual: "type=achievementCandidate",
         pass: true,
       },
       {
         name: "No achievementTriggered",
-        target: "pac-man-game/src/counter.js",
+        target: "copilot-quiz/src/counter.js",
         expected: "achievementTriggered not present",
         actual: "not present",
         pass: true,
       },
       {
         name: "CORS headers",
-        target: "pac-man-services/src/server.js",
+        target: "copilot-quiz-service/src/server.js",
         expected: "Access-Control-Allow-Origin: *",
         actual: "Access-Control-Allow-Origin: *",
         pass: true,
@@ -155,7 +140,7 @@ export class PacManStore extends EventEmitter {
     const failed = tests.filter((t) => !t.pass).length;
 
     this._model.validation = { run: true, tests, passed, failed };
-    this._model.plan[4].status = "done";
+    this._model.plan[3].status = "done";
     this._model.status = failed === 0 ? "validated" : "validation-failed";
     this._emit(`Validation: ${passed}/${tests.length} tests passed`);
     return { ok: failed === 0, passed, failed, tests };
@@ -167,7 +152,7 @@ export class PacManStore extends EventEmitter {
       ok: true,
       dashboardUrl: serviceUrl,
       eventsUrl: `${serviceUrl}/events`,
-      note: `Open ${serviceUrl} in the browser while playing Pac-Man to watch the live event stream.`,
+      note: `Open ${serviceUrl} in the browser while playing the quiz game to watch the live event stream.`
     };
   }
 

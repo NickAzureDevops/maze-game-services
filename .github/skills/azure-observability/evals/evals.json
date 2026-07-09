@@ -15,7 +15,7 @@
     },
     {
       "id": 1,
-      "prompt": "POST /event is intermittently failing from the game with CORS errors after a frontend change. Diagnose likely causes in pac-man-services, apply the smallest fix, and provide commands to prove cross-port ingestion works again.",
+      "prompt": "POST /event is intermittently failing from the game with CORS errors after a frontend change. Diagnose likely causes in copilot-quiz-service, apply the smallest fix, and provide commands to prove cross-port ingestion works again.",
       "expected_output": "A focused CORS-related fix in the service, preserving constraints, plus commands that demonstrate successful cross-origin event ingestion and retrieval.",
       "files": [],
       "assertions": [
